@@ -1,0 +1,40 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hairstyle Recommender</title>
+</head>
+<body>
+  <h1>Upload Your Photo</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="imageUpload" name="photo" accept="image/*" required />
+    <button type="submit">Upload Photo</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('imageUpload').files[0];
+      const formData = new FormData();
+      formData.append('photo', fileInput);
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+        resultDiv.innerText = data.message;
+      } catch (error) {
+        console.error('Error uploading photo:', error);
+      }
+    });
+  </script>
+</body>
+</html>
